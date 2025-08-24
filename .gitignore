@@ -13,3 +13,4 @@ bin-int/
 !vendor/bin
 /vendor/bin
 /WalnutApp/logs
+/LuximApp/logs

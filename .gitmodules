@@ -1,4 +1,6 @@
 [submodule "vendor/Walnut"]
 	path = vendor/Walnut
-	url = https://github.com/StudioCherno/Walnut.git
-	branch = dev
+	url = https://github.com/Zentifyyy/Walnut.git
+[submodule "vendor/libtinyfiledialogs"]
+	path = vendor/libtinyfiledialogs
+	url = https://github.com/IamtheMZI/libtinyfiledialogs.git
