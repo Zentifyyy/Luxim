@@ -15,6 +15,8 @@ project "LuximApp"
       "../vendor/Walnut/Walnut/Source",
       "../vendor/Walnut/Walnut/Platform/GUI",
 
+      "../vendor",
+
       "%{IncludeDir.VulkanSDK}",
       "%{IncludeDir.glm}",
    }
