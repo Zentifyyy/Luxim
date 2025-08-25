@@ -102,9 +102,28 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.TitlebarButtonHoveredColour = ImColor{ 0, 255, 220 ,140};
 	spec.TitlebarButtonPressedColour = ImColor{ 0, 255, 220 ,50 };
 
+	spec.TitlebarHeight = 70.0f;
+	spec.TitlebarPaddingY = 20.0f;
+	
+	spec.IconPath = "img/AppIcon.png";
+
 
 	Walnut::Application* app = new Walnut::Application(spec);
 	std::shared_ptr<ExampleLayer> exampleLayer = std::make_shared<ExampleLayer>();
+	
+	ImGuiStyle& style = ImGui::GetStyle();
+
+	ImVec4 titlebarCol = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::titlebar);
+	style.Colors[ImGuiCol_TabActive] = titlebarCol; 
+	style.Colors[ImGuiCol_TabHovered] = titlebarCol;
+	style.Colors[ImGuiCol_Tab] = titlebarCol;
+	style.Colors[ImGuiCol_TabUnfocusedActive] = titlebarCol;
+
+	style.Colors[ImGuiCol_SeparatorHovered] = { 0, 255, 220 , 0.4f };
+	style.Colors[ImGuiCol_SeparatorActive] = { 0, 255, 220 , 0.3f };
+
+	app->SetApplicationIcon("img/AppIcon.png");
+
 	app->PushLayer(exampleLayer);
 	app->SetMenubarCallback([app, exampleLayer]()
 	{
