@@ -5,7 +5,7 @@ project "LuximApp"
    targetdir "bin/%{cfg.buildcfg}"
    staticruntime "off"
 
-   files { "src/**.h", "src/**.cpp" }
+   files { "src/**.h", "src/**.cpp", "**.rc", "**.h" }
 
    includedirs
    {
@@ -26,8 +26,8 @@ project "LuximApp"
         "Walnut"
     }
 
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir ("../output/bin/" .. outputdir .. "/%{prj.name}")
+   objdir ("../output/bin-int/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
       systemversion "latest"

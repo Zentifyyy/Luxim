@@ -46,9 +46,9 @@ public:
 
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Add Favorite")){
+			if (ImGui::MenuItem("Add Favourite")){
 
-				if (!AddFavorite(tinyfd_openFileDialog("Open File", "*.txt", NULL, NULL, NULL, 0))){
+				if (!AddFavorite(tinyfd_openFileDialog("Open File", "", NULL, NULL, NULL, 0))){
 					
 					ImGui::EndMenu();
 					ImGui::End();
@@ -169,7 +169,7 @@ public:
 
 	void OpenFile() {
 		
-		if (!AddFavorite(tinyfd_openFileDialog("Open File", "*.txt", 0, 0, 0, 0))) {
+		if (!AddFavorite(tinyfd_openFileDialog("Open File", "", 0, 0, 0, 0))) {
 			return;
 		}
 
@@ -262,6 +262,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.Name = "Luxim";
 	spec.CustomTitlebar = true;
 
+	spec.CenterWindow = true;
+
 	
 	spec.TitlebarButtonColour = Walnut::UI::Colors::Theme::text;
 	spec.TitlebarButtonHoveredColour = ImColor{ 0, 255, 220 ,140};
@@ -271,6 +273,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.TitlebarPaddingY = 20.0f;
 	
 	spec.IconPath = "img/AppIcon.png";
+
+	spec.UseLogging = false;
 
 
 	Walnut::Application* app = new Walnut::Application(spec);
