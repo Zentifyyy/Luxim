@@ -184,6 +184,11 @@ public:
 		m_LuximEditor.UpdateTitle(FilePathToFileName(filePath));
 	}
 
+	void CreateNewFile() {
+		m_LuximEditor.UpdateTitle("New Document");
+		m_FileOpen = true;
+	}
+
 private:
 
 	bool AddFavorite(const char* filePath) {
@@ -302,6 +307,11 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 			if (ImGui::MenuItem("Open File"))
 			{
 				exampleLayer->OpenFile();
+			}
+
+			if (ImGui::MenuItem("New File"))
+			{
+				exampleLayer->CreateNewFile();
 			}
 
 			if (ImGui::MenuItem("Exit"))

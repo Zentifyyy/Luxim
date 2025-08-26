@@ -1,7 +1,10 @@
 #include "imgui.h"
+
 #include "iostream"
 #include "fstream"
 #include <filesystem>
+
+#include "libtinyfiledialogs/include/tinyfiledialogs.h"
 
 class Editor {
 public:
@@ -49,15 +52,32 @@ public:
 
 	void SaveFile() {
 
+		if (m_CurrentFilePath == "") {
+			
+			if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL))) {
+				return;
+			}
+		
+		}
+
 		m_FileOutput.open(m_CurrentFilePath);
 
 		if (!m_FileOutput.is_open()) { return; }
 
-		m_FileOutput<< m_EditorBuffer;
+		m_FileOutput << m_EditorBuffer;
 
 		m_WindowFlags = ImGuiWindowFlags_None;
 
 		m_FileOutput.close();
+	}
+
+	bool SetCurrentFilePath(const char* filePath) {
+
+		if (filePath == nullptr) { return false; }
+
+		m_CurrentFilePath = filePath;
+
+		return true;
 	}
 
 private:
@@ -69,6 +89,7 @@ private:
 	void ResetText() {
 		strcpy_s(m_EditorBuffer,"");
 	}
+
 
 private:
 
