@@ -38,6 +38,7 @@ public:
 		std::string text = "";
 
 		while (std::getline(m_FileInput, text)) {
+			text += "\n";
 			AppendToText(text);
 		}
 
