@@ -14,3 +14,4 @@ bin-int/
 /vendor/bin
 /WalnutApp/logs
 /LuximApp/logs
+LuximApp/favorites.ini

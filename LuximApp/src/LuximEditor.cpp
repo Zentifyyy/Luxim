@@ -28,7 +28,7 @@ public:
 	bool LoadFile(std::string& filePath) {
 
 		ResetText();
-
+		
 		m_CurrentFilePath = filePath;
 
 		m_FileInput.open(filePath);

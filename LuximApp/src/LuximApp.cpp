@@ -12,6 +12,10 @@
 class ExampleLayer : public Walnut::Layer
 {
 public:
+	void OnAttach() override {
+		LoadFile();
+	}
+
 	virtual void OnUIRender() override{
 
 		if (m_FileOpen) {
@@ -27,16 +31,17 @@ public:
 	}
 
 	void UI_DrawIntro() {
+
 		ImGui::Begin("Welcome to Luxim");
 
 		ImGui::Text("Luxim is a text editor created for ease of use.");
-
 		ImGui::Text("Add a document to the sidebar or simply open one from the top menu to get started!");
 
 		ImGui::End();
 	}
 
 	void UI_DrawSidebar() {
+
 		ImGui::Begin("Sidebar");
 
 		if (ImGui::BeginMenu("File"))
@@ -47,6 +52,8 @@ public:
 				if (filePath == "") { return; }
 
 				m_FavoritePaths.emplace_back(filePath);
+				
+				SaveFile();
 			}
 
 			ImGui::EndMenu();
@@ -54,7 +61,48 @@ public:
 
 		for (int i = 0; i < m_FavoritePaths.size(); i++) {
 
-			ImGui::Button(m_FavoritePaths[i].c_str(),{ImGui::GetContentRegionAvail().x, m_FavoriteButtonHeight});
+			if (ImGui::Button(FilePathToFileName(m_FavoritePaths[i]).c_str(), { ImGui::GetContentRegionAvail().x - 90, m_FavoriteButtonHeight }))
+			{
+				m_FileOpen = true;
+
+				if (!m_LuximEditor.LoadFile(m_FavoritePaths[i])) { return; }
+
+				m_LuximEditor.UpdateTitle(FilePathToFileName(m_FavoritePaths[i]));;
+			}
+
+			ImRect rect(
+				ImGui::GetItemRectMin(),
+				ImVec2{ ImGui::GetItemRectMax().x + 90, ImGui::GetItemRectMax().y }
+			);
+
+			if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max)) {
+				
+				ImGui::SameLine();
+
+				if (ImGui::Button("v", { 40, 40 })) {
+
+					std::string temp = "";
+
+					if (i == m_FavoritePaths.size() - 1) { ImGui::End(); return; }
+
+					temp = m_FavoritePaths[i + 1];
+					m_FavoritePaths[i + 1] = m_FavoritePaths[i];
+					m_FavoritePaths[i] = temp;
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::Button("^",{ 40 , 40})) {
+
+					std::string temp = "";
+
+					if (i == 0) { ImGui::End();  return; }
+
+					temp = m_FavoritePaths[i - 1];
+					m_FavoritePaths[i - 1] = m_FavoritePaths[i];
+					m_FavoritePaths[i] = temp;
+				}
+			}
 		}
 
 		ImGui::End();
@@ -124,6 +172,36 @@ private:
 		}
 	}
 
+	bool LoadFile() {
+
+		m_FileInput.open("favorites.ini");
+
+		if (!m_FileInput.is_open()) { return false; }
+
+		std::string text = "";
+
+		while (std::getline(m_FileInput, text)) {
+			m_FavoritePaths.emplace_back(text);
+		}
+
+		m_FileInput.close();
+
+		return true;
+	}
+
+	void SaveFile() {
+
+		m_FileOutput.open("favorites.ini");
+
+		if (!m_FileOutput.is_open()) { return; }
+
+		for (int i = 0; i < m_FavoritePaths.size(); i++) {
+			m_FileOutput << m_FavoritePaths[i] << "\n";
+		}
+
+		m_FileOutput.close();
+	}
+
 private:
 
 	Editor m_LuximEditor;
@@ -134,6 +212,9 @@ private:
 	std::vector<std::string> m_FavoritePaths{};
 
 	float m_FavoriteButtonHeight = 40.0f;
+
+	std::ifstream m_FileInput;
+	std::ofstream m_FileOutput;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
