@@ -60,9 +60,15 @@ public:
 			ImGui::EndMenu();
 		}
 
+		ImGui::Separator();
+
 		for (int i = 0; i < m_FavoritePaths.size(); i++) {
 
-			if (ImGui::Button(FilePathToFileName(m_FavoritePaths[i]).c_str(), { ImGui::GetContentRegionAvail().x - 90, m_FavoriteButtonHeight }))
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("Right-click to Delete");
+			}
+
+			if (ImGui::Selectable(FilePathToFileName(m_FavoritePaths[i]).c_str()))
 			{
 				m_FileOpen = true;
 
@@ -71,16 +77,22 @@ public:
 				m_LuximEditor.UpdateTitle(FilePathToFileName(m_FavoritePaths[i]));;
 			}
 
-			ImRect rect(
-				ImGui::GetItemRectMin(),
-				ImVec2{ ImGui::GetItemRectMax().x + 90, ImGui::GetItemRectMax().y }
-			);
+			if (ImGui::BeginPopupContextItem())
+			{
+				if (ImGui::Button("Delete")) {
 
-			if (ImGui::IsMouseHoveringRect(rect.Min, rect.Max)) {
-				
-				ImGui::SameLine();
+					m_FavoritePaths.erase(m_FavoritePaths.begin() + i);
 
-				if (ImGui::Button("v", { 40, 40 })) {
+					SaveFile();
+
+					ImGui::CloseCurrentPopup();
+					ImGui::EndPopup();
+					ImGui::End();
+
+					return;
+				}
+
+				if (ImGui::Button("Move Down")) {
 
 					std::string temp = "";
 
@@ -89,12 +101,15 @@ public:
 					temp = m_FavoritePaths[i + 1];
 					m_FavoritePaths[i + 1] = m_FavoritePaths[i];
 					m_FavoritePaths[i] = temp;
+
+					ImGui::CloseCurrentPopup();
+					ImGui::EndPopup();
+					ImGui::End();
+
+					return;
 				}
 
-				ImGui::SameLine();
-
-				if (ImGui::Button("^",{ 40 , 40})) {
-
+				if (ImGui::Button("Move Up")) {
 					std::string temp = "";
 
 					if (i == 0) { ImGui::End();  return; }
@@ -102,7 +117,15 @@ public:
 					temp = m_FavoritePaths[i - 1];
 					m_FavoritePaths[i - 1] = m_FavoritePaths[i];
 					m_FavoritePaths[i] = temp;
+
+					ImGui::CloseCurrentPopup();
+					ImGui::EndPopup();
+					ImGui::End();
+
+					return;;
 				}
+
+				ImGui::EndPopup();
 			}
 		}
 
