@@ -72,7 +72,7 @@ private:
 
 private:
 
-	char m_EditorBuffer[1024 * 16] = "";
+	char m_EditorBuffer[1024 * 64] = "";
 
 	std::string m_WindowTitle = "Luxim Editor";
 

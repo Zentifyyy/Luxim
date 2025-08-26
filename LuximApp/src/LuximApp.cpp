@@ -79,7 +79,7 @@ public:
 
 			if (ImGui::BeginPopupContextItem())
 			{
-				if (ImGui::Button("Delete")) {
+				if (ImGui::Selectable("Delete")) {
 
 					m_FavoritePaths.erase(m_FavoritePaths.begin() + i);
 
@@ -92,7 +92,7 @@ public:
 					return;
 				}
 
-				if (ImGui::Button("Move Down")) {
+				if (ImGui::Selectable("Move Down")) {
 
 					std::string temp = "";
 
@@ -109,7 +109,7 @@ public:
 					return;
 				}
 
-				if (ImGui::Button("Move Up")) {
+				if (ImGui::Selectable("Move Up")) {
 					std::string temp = "";
 
 					if (i == 0) { ImGui::End();  return; }
