@@ -47,13 +47,14 @@ public:
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Add Favorite")){
-				std::string filePath = tinyfd_openFileDialog("Open File", "*.txt", 0, 0, 0, 0);
 
-				if (filePath == "") { return; }
+				if (!AddFavorite(tinyfd_openFileDialog("Open File", "*.txt", NULL, NULL, NULL, 0))){
+					
+					ImGui::EndMenu();
+					ImGui::End();
 
-				m_FavoritePaths.emplace_back(filePath);
-				
-				SaveFile();
+					return;
+				}
 			}
 
 			ImGui::EndMenu();
@@ -145,7 +146,11 @@ public:
 
 	void OpenFile() {
 		
-		std::string filePath = tinyfd_openFileDialog("Open File", "*.txt", 0, 0, 0, 0);
+		if (!AddFavorite(tinyfd_openFileDialog("Open File", "*.txt", 0, 0, 0, 0))) {
+			return;
+		}
+
+		std::string filePath = m_FavoritePaths.at(m_FavoritePaths.size() - 1);
 
 		if (filePath == "") { return; }
 
@@ -157,6 +162,17 @@ public:
 	}
 
 private:
+
+	bool AddFavorite(const char* filePath) {
+
+		if (filePath == nullptr) { return false; }
+
+		m_FavoritePaths.push_back(filePath);
+
+		SaveFile();
+
+		return true;
+	}
 
 	std::string FilePathToFileName(std::string& filePath) {
 
