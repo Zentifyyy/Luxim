@@ -14,19 +14,50 @@ class ExampleLayer : public Walnut::Layer
 public:
 	virtual void OnUIRender() override{
 
-		m_LuximEditor.RenderEditor();
-		
+		if (m_FileOpen) {
+			m_LuximEditor.RenderEditor();
+		}
+		else {
+			UI_DrawIntro();
+		}
+
+		UI_DrawSidebar();
+
+		UI_DrawAboutModal();
+	}
+
+	void UI_DrawIntro() {
+		ImGui::Begin("Welcome to Luxim");
+
+		ImGui::Text("Luxim is a text editor created for ease of use.");
+
+		ImGui::Text("Add a document to the sidebar or simply open one from the top menu to get started!");
+
+		ImGui::End();
+	}
+
+	void UI_DrawSidebar() {
 		ImGui::Begin("Sidebar");
-		
-		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyPressed(ImGuiKey_S)) {
-			m_LuximEditor.SaveFile();
+
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Add Favorite")){
+				std::string filePath = tinyfd_openFileDialog("Open File", "*.txt", 0, 0, 0, 0);
+
+				if (filePath == "") { return; }
+
+				m_FavoritePaths.emplace_back(filePath);
+			}
+
+			ImGui::EndMenu();
+		}
+
+		for (int i = 0; i < m_FavoritePaths.size(); i++) {
+
+			ImGui::Button(m_FavoritePaths[i].c_str(),{ImGui::GetContentRegionAvail().x, m_FavoriteButtonHeight});
 		}
 
 		ImGui::End();
-
-		//ImGui::ShowDemoWindow();
-
-		UI_DrawAboutModal();
 	}
 
 	void UI_DrawAboutModal()
@@ -70,17 +101,25 @@ public:
 
 		if (filePath == "") { return; }
 
+		m_FileOpen = true;
+
 		if (!m_LuximEditor.LoadFile(filePath)) { return; }
+		
+		m_LuximEditor.UpdateTitle(FilePathToFileName(filePath));
+	}
+
+private:
+
+	std::string FilePathToFileName(std::string& filePath) {
 
 		std::string fileName = "";
 
 		for (int i = filePath.length(); i > 0; i--) {
-			if (filePath.at(i - 1) != '\\') {
-				fileName.insert(fileName.begin(), filePath.at(i - 1));
+			if (filePath[i] != '\\') {
+				fileName.insert(fileName.begin(), filePath[i]);
 			}
 			else {
-				m_LuximEditor.UpdateTitle(fileName);
-				return;
+				return fileName;
 			}
 		}
 	}
@@ -88,7 +127,13 @@ public:
 private:
 
 	Editor m_LuximEditor;
+
 	bool m_AboutModalOpen = false;
+	bool m_FileOpen = false;
+
+	std::vector<std::string> m_FavoritePaths{};
+
+	float m_FavoriteButtonHeight = 40.0f;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
@@ -111,6 +156,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	Walnut::Application* app = new Walnut::Application(spec);
 	std::shared_ptr<ExampleLayer> exampleLayer = std::make_shared<ExampleLayer>();
 	
+	//Styling
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	ImVec4 titlebarCol = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::titlebar);

@@ -10,6 +10,10 @@ public:
 
 		ImGui::Begin(m_WindowTitle.c_str(), 0, m_WindowFlags);
 
+		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyPressed(ImGuiKey_S)) {
+			SaveFile();
+		}
+
 		if (ImGui::InputTextMultiline("##source", m_EditorBuffer, IM_ARRAYSIZE(m_EditorBuffer), ImGui::GetContentRegionAvail(), m_TextInputFlags)) {
 			m_WindowFlags = ImGuiWindowFlags_UnsavedDocument;
 		}
@@ -17,7 +21,7 @@ public:
 		ImGui::End();
 	}
 
-	void UpdateTitle(std::string& newTitle) {
+	void UpdateTitle(std::string newTitle) {
 		m_WindowTitle = newTitle;
 	}
 
