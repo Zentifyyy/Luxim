@@ -4,7 +4,7 @@
 #include "fstream"
 #include <filesystem>
 
-#include "libtinyfiledialogs/include/tinyfiledialogs.h"
+#include "tinyfiledialogs.h"
 
 class Editor {
 public:

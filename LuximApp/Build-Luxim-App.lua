@@ -15,7 +15,7 @@ project "LuximApp"
       "../vendor/Walnut/Walnut/Source",
       "../vendor/Walnut/Walnut/Platform/GUI",
 
-      "../vendor",
+      "../vendor/libtinyfiledialogs/include",
 
       "%{IncludeDir.VulkanSDK}",
       "%{IncludeDir.glm}",

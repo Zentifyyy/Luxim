@@ -1,6 +1,15 @@
 # Luxim
 Luxim is the text editor made for ease of use. Add favourite files to your sidebar, re-order them for accessibility and open them with a click of a button. Luxim is made using the [Walnut Framework](https://github.com/StudioCherno/Walnut), making it simple, elegant and pretty performant.
 
+### Features
+- File Opening, File Creation Editing and saving (Obviously).
+- Native file dialogs with [libtinyfiledialogs](https://github.com/IamtheMZI/libtinyfiledialogs).
+- Simple and elegant design.
+- Tab / Window docking, made possible by [Dear ImGui](https://github.com/ocornut/imgui).
+- Persistant sidebar with list of favourite files which you can personalise the order of.
+- Custom titlebar with themed titlebar buttons, made using the [Walnut Framework](https://github.com/StudioCherno/Walnut).
+
+
 ## Getting Started
 #### For compiled binaries check the [github releases page](https://github.com/Zentifyyy/Luxim/releases).
 

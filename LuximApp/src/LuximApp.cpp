@@ -7,7 +7,7 @@
 
 #include "../src/LuximEditor.cpp"
 
-#include "libtinyfiledialogs/include/tinyfiledialogs.h"
+#include "tinyfiledialogs.h"
 
 class ExampleLayer : public Walnut::Layer
 {
