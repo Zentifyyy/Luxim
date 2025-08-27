@@ -1,5 +1,8 @@
-# Luxim
+<img src="https://github.com/Zentifyyy/Luxim/blob/master/LuximApp/img/AppIcon.png?raw=true" width="48">
+
 Luxim is the text editor made for ease of use. Add favourite files to your sidebar, re-order them for accessibility and open them with a click of a button. Luxim is made using the [Walnut Framework](https://github.com/StudioCherno/Walnut), making it simple, elegant and pretty performant.
+
+<img src="https://github.com/Zentifyyy/Luxim/blob/master/LuximPreview.png?raw=true" width="300">
 
 ### Features
 - File Opening, File Creation Editing and saving (Obviously).
@@ -38,3 +41,5 @@ git clone --recursive https://github.com/Zentifyyy/Luxim.git
 - [stb_image](https://github.com/nothings/stb)
 - [GLM](https://github.com/g-truc/glm)
 - [libtinyfiledialogs](https://github.com/IamtheMZI/libtinyfiledialogs)
+
+[def]: ttps://imgur.com/Dmj9co
