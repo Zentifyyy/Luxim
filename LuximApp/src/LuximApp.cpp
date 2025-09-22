@@ -12,6 +12,7 @@
 class ExampleLayer : public Walnut::Layer
 {
 public:
+
 	void OnAttach() override {
 		LoadFile();
 	}
@@ -274,13 +275,14 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.TitlebarButtonHoveredColour = ImColor{ 0, 255, 220 ,140};
 	spec.TitlebarButtonPressedColour = ImColor{ 0, 255, 220 ,50 };
 
-	spec.TitlebarHeight = 70.0f;
-	spec.TitlebarPaddingY = 20.0f;
+	spec.TitlebarHeight = 48.0f;
+	spec.TitlebarPaddingY = 8.0f;
+
+	spec.LogoSize = { 38.0f , 38.0f };
 	
 	spec.IconPath = "img/AppIcon.png";
 
 	spec.UseLogging = false;
-
 
 	Walnut::Application* app = new Walnut::Application(spec);
 	std::shared_ptr<ExampleLayer> exampleLayer = std::make_shared<ExampleLayer>();
