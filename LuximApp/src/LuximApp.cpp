@@ -11,7 +11,7 @@
 
 class ExampleLayer : public Walnut::Layer
 {
-public:
+public: // Public Functions
 
 	void OnAttach() override {
 		LoadFile();
@@ -31,6 +31,33 @@ public:
 		UI_DrawAboutModal();
 	}
 
+	void OpenFile() {
+		if (!AddFavorite(tinyfd_openFileDialog("Open File", "", 0, 0, 0, 0)))
+			return;
+
+		std::string filePath = m_FavoritePaths.at(m_FavoritePaths.size() - 1);
+
+		if (filePath == "") { return; }
+
+		m_FileOpen = true;
+
+		if (!m_LuximEditor.LoadFile(filePath)) { return; }
+		
+		m_LuximEditor.UpdateTitle(FilePathToFileName(filePath));
+	}
+
+	void CreateNewFile() {
+		m_LuximEditor.UpdateTitle("New Document");
+		m_FileOpen = true;
+	}
+
+	void ShowAboutModal()
+	{
+		m_AboutModalOpen = true;
+	}
+
+private: // Private Functions
+
 	void UI_DrawIntro() {
 
 		ImGui::Begin("Welcome to Luxim");
@@ -47,10 +74,10 @@ public:
 
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("Add Favourite")){
+			if (ImGui::MenuItem("Add Favourite")) {
 
-				if (!AddFavorite(tinyfd_openFileDialog("Open File", "", NULL, NULL, NULL, 0))){
-					
+				if (!AddFavorite(tinyfd_openFileDialog("Open File", "", NULL, NULL, NULL, 0))) {
+
 					ImGui::EndMenu();
 					ImGui::End();
 
@@ -133,8 +160,7 @@ public:
 		ImGui::End();
 	}
 
-	void UI_DrawAboutModal()
-	{
+	void UI_DrawAboutModal() {
 		if (!m_AboutModalOpen)
 			return;
 
@@ -163,38 +189,9 @@ public:
 		}
 	}
 
-	void ShowAboutModal()
-	{
-		m_AboutModalOpen = true;
-	}
-
-	void OpenFile() {
-		
-		if (!AddFavorite(tinyfd_openFileDialog("Open File", "", 0, 0, 0, 0))) {
-			return;
-		}
-
-		std::string filePath = m_FavoritePaths.at(m_FavoritePaths.size() - 1);
-
-		if (filePath == "") { return; }
-
-		m_FileOpen = true;
-
-		if (!m_LuximEditor.LoadFile(filePath)) { return; }
-		
-		m_LuximEditor.UpdateTitle(FilePathToFileName(filePath));
-	}
-
-	void CreateNewFile() {
-		m_LuximEditor.UpdateTitle("New Document");
-		m_FileOpen = true;
-	}
-
-private:
-
 	bool AddFavorite(const char* filePath) {
-
-		if (filePath == nullptr) { return false; }
+		if (filePath == nullptr)
+			return false;
 
 		m_FavoritePaths.push_back(filePath);
 
@@ -247,7 +244,7 @@ private:
 		m_FileOutput.close();
 	}
 
-private:
+private: // Private Variables
 
 	Editor m_LuximEditor;
 
@@ -267,9 +264,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	Walnut::ApplicationSpecification spec;
 	spec.Name = "Luxim";
 	spec.CustomTitlebar = true;
-
 	spec.CenterWindow = true;
-
 	
 	spec.TitlebarButtonColour = Walnut::UI::Colors::Theme::text;
 	spec.TitlebarButtonHoveredColour = ImColor{ 0, 255, 220 ,140};

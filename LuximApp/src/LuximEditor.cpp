@@ -7,7 +7,7 @@
 #include "tinyfiledialogs.h"
 
 class Editor {
-public:
+public: // Public Functions
 
 	void RenderEditor() {
 
@@ -50,14 +50,13 @@ public:
 		return true;
 	}
 
+private: // Private Functions
+
 	void SaveFile() {
 
 		if (m_CurrentFilePath == "") {
-			
-			if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL))) {
+			if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL)))
 				return;
-			}
-		
 		}
 
 		m_FileOutput.open(m_CurrentFilePath);
@@ -72,15 +71,13 @@ public:
 	}
 
 	bool SetCurrentFilePath(const char* filePath) {
-
-		if (filePath == nullptr) { return false; }
+		if (filePath == nullptr)
+			return false;
 
 		m_CurrentFilePath = filePath;
 
 		return true;
 	}
-
-private:
 	
 	void AppendToText(std::string& newText) {
 		strcat_s(m_EditorBuffer, newText.c_str());
@@ -90,8 +87,7 @@ private:
 		strcpy_s(m_EditorBuffer,"");
 	}
 
-
-private:
+private: // Private Variables
 
 	char m_EditorBuffer[1024 * 64] = "";
 
