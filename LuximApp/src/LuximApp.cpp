@@ -5,9 +5,9 @@
 #include "Walnut/UI/UI.h"
 #include "Walnut/ImGui/ImGuiTheme.h"
 
-#include "../src/LuximEditor.cpp"
-
 #include "tinyfiledialogs.h"
+
+#include "LuximEditor.cpp"
 
 class ExampleLayer : public Walnut::Layer
 {

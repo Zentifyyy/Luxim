@@ -5,11 +5,14 @@
 #include <filesystem>
 
 #include "tinyfiledialogs.h"
+#include <imgui_internal.h>
 
 class Editor {
 public: // Public Functions
 
 	void RenderEditor() {
+
+		ImGui::SetNextWindowDockID(2,0);
 
 		ImGui::Begin(m_WindowTitle.c_str(), 0, m_WindowFlags);
 
@@ -102,5 +105,4 @@ private: // Private Variables
 
 	std::ifstream m_FileInput;
 	std::ofstream m_FileOutput;
-
 };
