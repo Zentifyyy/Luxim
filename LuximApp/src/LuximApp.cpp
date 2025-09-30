@@ -193,6 +193,11 @@ private: // Private Functions
 		if (filePath == nullptr)
 			return false;
 
+		for (int i = 0; i < m_FavoritePaths.size(); i++) {
+			if (filePath == m_FavoritePaths[i])
+				return false;
+		}
+
 		m_FavoritePaths.push_back(filePath);
 
 		SaveFile();
