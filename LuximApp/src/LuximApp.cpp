@@ -29,6 +29,8 @@ public: // Public Functions
 		UI_DrawSidebar();
 
 		UI_DrawAboutModal();
+
+		UI_DrawPreferencesModal();
 	}
 
 	void OpenFile() {
@@ -56,6 +58,11 @@ public: // Public Functions
 		m_AboutModalOpen = true;
 	}
 
+	inline void ShowPreferencesModal()
+	{
+		m_PreferencesOpen = true;
+	}
+
 private: // Private Functions
 
 	void UI_DrawIntro() {
@@ -72,7 +79,7 @@ private: // Private Functions
 
 		ImGui::Begin("Sidebar");
 
-		if (ImGui::BeginMenu("File"))
+		if (ImGui::BeginMenu("Favourites"))
 		{
 			if (ImGui::MenuItem("Add Favourite")) {
 
@@ -175,9 +182,18 @@ private: // Private Functions
 			Walnut::UI::ShiftCursorX(20.0f);
 
 			ImGui::BeginGroup();
-			ImGui::Text("Walnut application framework");
-			ImGui::Text("by Studio Cherno.");
+			ImGui::Text("Luxim - The Text Editor");
+			ImGui::Text("by Zentifyyy.");
 			ImGui::EndGroup();
+
+			Walnut::UI::ShiftCursorY(10.0f);
+			ImGui::Separator();
+
+			ImGui::SetWindowFontScale(0.75f);
+			ImGui::Text("Made With the Walnut Application Framework");
+			ImGui::SetWindowFontScale(1.0f);
+
+			Walnut::UI::ShiftCursorY(10.0f);
 
 			if (Walnut::UI::ButtonCentered("Close"))
 			{
@@ -217,6 +233,8 @@ private: // Private Functions
 				return fileName;
 			}
 		}
+
+		return "";
 	}
 
 	bool LoadFile() {
@@ -249,12 +267,34 @@ private: // Private Functions
 		m_FileOutput.close();
 	}
 
+	void UI_DrawPreferencesModal() {
+		if (!m_PreferencesOpen)
+			return;
+
+		ImGui::OpenPopup("Preferences");
+		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		if (m_PreferencesOpen)
+		{
+			ImGui::SliderFloat("Editor Font Scale", &Pref_EditorFontScale , 0.5f, 2.0f,"%.2f",ImGuiSliderFlags_AlwaysClamp);
+
+			if (Walnut::UI::ButtonCentered("Save"))
+			{
+				m_LuximEditor.LoadPreferences(Pref_EditorFontScale);
+				m_PreferencesOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+
 private: // Private Variables
 
 	Editor m_LuximEditor;
 
 	bool m_AboutModalOpen = false;
 	bool m_FileOpen = false;
+	bool m_PreferencesOpen = false;
 
 	std::vector<std::string> m_FavoritePaths{};
 
@@ -262,6 +302,10 @@ private: // Private Variables
 
 	std::ifstream m_FileInput;
 	std::ofstream m_FileOutput;
+
+private: // Preferences
+
+	float Pref_EditorFontScale = 1.0f;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
@@ -316,10 +360,25 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 				exampleLayer->CreateNewFile();
 			}
 
+			if (ImGui::MenuItem("About"))
+			{
+				exampleLayer->ShowAboutModal();
+			}
+
 			if (ImGui::MenuItem("Exit"))
 			{
 				app->Close();
 			}
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Settings"))
+		{
+			if (ImGui::MenuItem("Preferences"))
+			{
+				exampleLayer->ShowPreferencesModal();
+			}
+
 			ImGui::EndMenu();
 		}
 	});

@@ -19,9 +19,11 @@ public: // Public Functions
 			SaveFile();
 		}
 
+		ImGui::SetWindowFontScale(m_EditorTextScale);
 		if (ImGui::InputTextMultiline("##source", m_EditorBuffer, IM_ARRAYSIZE(m_EditorBuffer), ImGui::GetContentRegionAvail(), m_TextInputFlags)) {
 			m_WindowFlags = ImGuiWindowFlags_UnsavedDocument;
 		}
+		ImGui::SetWindowFontScale(1.0f);
 
 		ImGui::End();
 	}
@@ -31,6 +33,8 @@ public: // Public Functions
 	}
 
 	bool LoadFile(std::string& filePath) {
+
+		if (m_WindowFlags == ImGuiWindowFlags_UnsavedDocument) { SaveFile(); }
 
 		ResetText();
 		
@@ -50,6 +54,10 @@ public: // Public Functions
 		m_FileInput.close();
 
 		return true;
+	}
+
+	void LoadPreferences(float fontScale) {
+		m_EditorTextScale = fontScale;
 	}
 
 private: // Private Functions
@@ -104,4 +112,9 @@ private: // Private Variables
 
 	std::ifstream m_FileInput;
 	std::ofstream m_FileOutput;
+
+private: //Preferences
+
+	float m_EditorTextScale = 1.0f;
+
 };
