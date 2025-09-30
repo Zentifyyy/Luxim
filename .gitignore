@@ -17,3 +17,4 @@ bin-int/
 LuximApp/favorites.ini
 LuximApp/LuximApp.aps
 /LuximApp/obj
+LuximApp/imgui.ini

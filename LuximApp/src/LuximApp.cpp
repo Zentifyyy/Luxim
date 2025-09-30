@@ -46,12 +46,12 @@ public: // Public Functions
 		m_LuximEditor.UpdateTitle(FilePathToFileName(filePath));
 	}
 
-	void CreateNewFile() {
+	inline void CreateNewFile() {
 		m_LuximEditor.UpdateTitle("New Document");
 		m_FileOpen = true;
 	}
 
-	void ShowAboutModal()
+	inline void ShowAboutModal()
 	{
 		m_AboutModalOpen = true;
 	}

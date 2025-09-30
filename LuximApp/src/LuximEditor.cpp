@@ -5,7 +5,6 @@
 #include <filesystem>
 
 #include "tinyfiledialogs.h"
-#include <imgui_internal.h>
 
 class Editor {
 public: // Public Functions
@@ -27,7 +26,7 @@ public: // Public Functions
 		ImGui::End();
 	}
 
-	void UpdateTitle(std::string newTitle) {
+	inline void UpdateTitle(std::string newTitle) {
 		m_WindowTitle = newTitle;
 	}
 
@@ -82,11 +81,11 @@ private: // Private Functions
 		return true;
 	}
 	
-	void AppendToText(std::string& newText) {
+	inline void AppendToText(std::string& newText) {
 		strcat_s(m_EditorBuffer, newText.c_str());
 	}
 
-	void ResetText() {
+	inline void ResetText() {
 		strcpy_s(m_EditorBuffer,"");
 	}
 
