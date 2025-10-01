@@ -14,10 +14,11 @@ class ExampleLayer : public Walnut::Layer
 public: // Public Functions
 
 	void OnAttach() override {
-		LoadFile();
+		//LoadFile();
+		LoadPrefs();
 	}
 
-	virtual void OnUIRender() override{
+	virtual void OnUIRender() override {
 
 		if (m_FileOpen) {
 			m_LuximEditor.RenderEditor();
@@ -157,7 +158,7 @@ private: // Private Functions
 					ImGui::EndPopup();
 					ImGui::End();
 
-					return;;
+					return;
 				}
 
 				ImGui::EndPopup();
@@ -267,6 +268,14 @@ private: // Private Functions
 		m_FileOutput.close();
 	}
 
+	bool IsValidPath(std::string path, std::string& out) {
+		if (path.empty())
+			return false;
+
+		out = path;
+		return true;
+	}
+
 	void UI_DrawPreferencesModal() {
 		if (!m_PreferencesOpen)
 			return;
@@ -280,12 +289,51 @@ private: // Private Functions
 			if (Walnut::UI::ButtonCentered("Save"))
 			{
 				m_LuximEditor.LoadPreferences(Pref_EditorFontScale);
+				SavePrefs();
 				m_PreferencesOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
 
 			ImGui::EndPopup();
 		}
+	}
+
+	void LoadPrefs() 
+	{
+		m_FileInput.open("prefs.ini");
+
+		if (!m_FileInput.is_open()) { return; }
+
+		std::string text = "";
+
+		while (std::getline(m_FileInput, text))
+		{
+			ImGuiIO io = ImGui::GetIO();
+
+			switch (text[0])
+			{
+			case '0':
+				Pref_EditorFontScale = std::stof(text);
+				break;
+			default:
+				break;
+			}
+		}
+
+		m_FileInput.close();
+	}
+
+	void SavePrefs() 
+	{
+		m_FileOutput.open("prefs.ini");
+
+		if (!m_FileOutput.is_open()) { return; }
+
+		m_FileOutput << '0' << std::to_string(Pref_EditorFontScale) << "\n";
+		
+		
+
+		m_FileOutput.close();
 	}
 
 private: // Private Variables

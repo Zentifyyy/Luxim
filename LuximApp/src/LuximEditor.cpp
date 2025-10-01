@@ -20,9 +20,11 @@ public: // Public Functions
 		}
 
 		ImGui::SetWindowFontScale(m_EditorTextScale);
+
 		if (ImGui::InputTextMultiline("##source", m_EditorBuffer, IM_ARRAYSIZE(m_EditorBuffer), ImGui::GetContentRegionAvail(), m_TextInputFlags)) {
 			m_WindowFlags = ImGuiWindowFlags_UnsavedDocument;
 		}
+
 		ImGui::SetWindowFontScale(1.0f);
 
 		ImGui::End();
