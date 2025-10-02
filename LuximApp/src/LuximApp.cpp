@@ -9,6 +9,11 @@
 
 #include "LuximEditor.cpp"
 
+#define FONTSCALE '1'
+#define TEXTCOLOUR 't'
+#define BORDERCOLOUR 'b'
+#define BACKGROUNDCOLOUR 'g'
+
 class ExampleLayer : public Walnut::Layer
 {
 public: // Public Functions
@@ -286,6 +291,26 @@ private: // Private Functions
 		{
 			ImGui::SliderFloat("Editor Font Scale", &Pref_EditorFontScale , 0.5f, 2.0f,"%.2f",ImGuiSliderFlags_AlwaysClamp);
 
+			ImGui::Separator();
+
+			if(ImGui::ColorEdit3("Text Colour", (float*)&style.Colors[ImGuiCol_Text]))
+				 Pref_TextColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
+
+			if (ImGui::ColorEdit3("Border Colour", (float*)&style.Colors[ImGuiCol_Border]))
+				Pref_BorderColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Border]);
+
+			if (ImGui::ColorEdit3("Background Colour", (float*)&style.Colors[ImGuiCol_WindowBg])) {
+				Pref_BackgroundColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_WindowBg]);
+				ImVec4 bgCol = style.Colors[ImGuiCol_WindowBg];
+				style.Colors[ImGuiCol_Tab] = bgCol;
+				style.Colors[ImGuiCol_TabActive] = bgCol;
+				style.Colors[ImGuiCol_TabUnfocused] = bgCol;
+				style.Colors[ImGuiCol_TabUnfocusedActive] = bgCol;
+				style.Colors[ImGuiCol_TabHovered] = bgCol;
+				style.Colors[ImGuiCol_TitleBg] = bgCol;
+				style.Colors[ImGuiCol_TitleBgActive] = bgCol;
+			}
+			
 			if (Walnut::UI::ButtonCentered("Save"))
 			{
 				m_LuximEditor.LoadPreferences(Pref_EditorFontScale);
@@ -312,8 +337,23 @@ private: // Private Functions
 
 			switch (text[0])
 			{
-			case '0':
+			case FONTSCALE:
 				Pref_EditorFontScale = std::stof(text);
+				break;
+			case TEXTCOLOUR:
+				text.erase(0, 1);
+				Pref_TextColour = std::stoul(text);
+				SetCustomColourTheme();
+				break;
+			case BORDERCOLOUR:
+				text.erase(0, 1);
+				Pref_BorderColour = std::stoul(text);
+				SetCustomColourTheme();
+				break;
+			case BACKGROUNDCOLOUR:
+				text.erase(0, 1);
+				Pref_BackgroundColour = std::stoul(text);
+				SetCustomColourTheme();
 				break;
 			default:
 				break;
@@ -329,11 +369,30 @@ private: // Private Functions
 
 		if (!m_FileOutput.is_open()) { return; }
 
-		m_FileOutput << '0' << std::to_string(Pref_EditorFontScale) << "\n";
-		
-		
+		m_FileOutput << FONTSCALE << std::to_string(Pref_EditorFontScale) << "\n";
+
+		m_FileOutput << TEXTCOLOUR << Pref_TextColour << "\n";
+		m_FileOutput << BORDERCOLOUR << Pref_BorderColour << "\n";
+		m_FileOutput << BACKGROUNDCOLOUR << Pref_BackgroundColour << "\n";
 
 		m_FileOutput.close();
+	}
+
+	void SetCustomColourTheme() {
+
+		style.Colors[ImGuiCol_Text] = ImGui::ColorConvertU32ToFloat4(Pref_TextColour);
+
+		style.Colors[ImGuiCol_Border] = ImGui::ColorConvertU32ToFloat4(Pref_BorderColour);
+
+		style.Colors[ImGuiCol_WindowBg] = ImGui::ColorConvertU32ToFloat4(Pref_BackgroundColour);
+		ImVec4 bgCol = style.Colors[ImGuiCol_WindowBg];
+		style.Colors[ImGuiCol_Tab] = bgCol;
+		style.Colors[ImGuiCol_TabActive] = bgCol;
+		style.Colors[ImGuiCol_TabUnfocused] = bgCol;
+		style.Colors[ImGuiCol_TabUnfocusedActive] = bgCol;
+		style.Colors[ImGuiCol_TabHovered] = bgCol;
+		style.Colors[ImGuiCol_TitleBg] = bgCol;
+		style.Colors[ImGuiCol_TitleBgActive] = bgCol;
 	}
 
 private: // Private Variables
@@ -351,9 +410,16 @@ private: // Private Variables
 	std::ifstream m_FileInput;
 	std::ofstream m_FileOutput;
 
+	ImGuiStyle& style = ImGui::GetStyle();
+
 private: // Preferences
 
 	float Pref_EditorFontScale = 1.0f;
+
+	ImU32 Pref_TextColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
+	ImU32 Pref_BorderColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Border]);
+	ImU32 Pref_BackgroundColour = Walnut::UI::Colors::Theme::background;
+
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
