@@ -310,6 +310,20 @@ private: // Private Functions
 				style.Colors[ImGuiCol_TitleBg] = bgCol;
 				style.Colors[ImGuiCol_TitleBgActive] = bgCol;
 			}
+
+			if (ImGui::Button("Revert")) {
+				style.Colors[ImGuiCol_Text] = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::text);
+				style.Colors[ImGuiCol_Border] = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::backgroundDark);
+				ImVec4 bgCol = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::titlebar);
+				style.Colors[ImGuiCol_WindowBg] = bgCol;
+				style.Colors[ImGuiCol_Tab] = bgCol;
+				style.Colors[ImGuiCol_TabActive] = bgCol;
+				style.Colors[ImGuiCol_TabUnfocused] = bgCol;
+				style.Colors[ImGuiCol_TabUnfocusedActive] = bgCol;
+				style.Colors[ImGuiCol_TabHovered] = bgCol;
+				style.Colors[ImGuiCol_TitleBg] = bgCol;
+				style.Colors[ImGuiCol_TitleBgActive] = bgCol;
+			}
 			
 			if (Walnut::UI::ButtonCentered("Save"))
 			{
