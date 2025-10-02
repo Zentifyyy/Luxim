@@ -55,6 +55,7 @@ public: // Public Functions
 	}
 
 	inline void CreateNewFile() {
+		m_LuximEditor.NewFile();
 		m_LuximEditor.UpdateTitle("New Document");
 		m_FileOpen = true;
 	}
@@ -227,7 +228,7 @@ private: // Private Functions
 		return true;
 	}
 
-	std::string FilePathToFileName(std::string& filePath) {
+	inline std::string FilePathToFileName(std::string& filePath) {
 
 		std::string fileName = "";
 
@@ -284,7 +285,7 @@ private: // Private Functions
 	void UI_DrawPreferencesModal() {
 		if (!m_PreferencesOpen)
 			return;
-
+		
 		ImGui::OpenPopup("Preferences");
 		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 		if (m_PreferencesOpen)

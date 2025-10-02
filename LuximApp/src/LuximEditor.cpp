@@ -1,4 +1,5 @@
 #include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
 
 #include "iostream"
 #include "fstream"
@@ -21,7 +22,7 @@ public: // Public Functions
 
 		ImGui::SetWindowFontScale(m_EditorTextScale);
 
-		if (ImGui::InputTextMultiline("##source", m_EditorBuffer, IM_ARRAYSIZE(m_EditorBuffer), ImGui::GetContentRegionAvail(), m_TextInputFlags)) {
+		if (ImGui::InputTextMultiline("##source", &m_EditorBufferStr, ImGui::GetContentRegionAvail(), m_TextInputFlags)) {
 			m_WindowFlags = ImGuiWindowFlags_UnsavedDocument;
 		}
 
@@ -62,7 +63,16 @@ public: // Public Functions
 		m_EditorTextScale = fontScale;
 	}
 
+	void NewFile() {
+		ResetText();
+		m_CurrentFilePath = "";
+	}
+
 private: // Private Functions
+
+	inline void ResetText() {
+		m_EditorBufferStr = "";
+	}
 
 	void SaveFile() {
 
@@ -75,33 +85,40 @@ private: // Private Functions
 
 		if (!m_FileOutput.is_open()) { return; }
 
-		m_FileOutput << m_EditorBuffer;
+		m_FileOutput << m_EditorBufferStr;
 
 		m_WindowFlags = ImGuiWindowFlags_None;
 
 		m_FileOutput.close();
 	}
 
-	bool SetCurrentFilePath(const char* filePath) {
-		if (filePath == nullptr)
+	bool SetCurrentFilePath(std::string filePath) {
+		if (filePath == "")
 			return false;
 
 		m_CurrentFilePath = filePath;
+		
+		std::string fileName = "";
+		for (int i = filePath.length(); i > 0; i--) {
+			if (filePath[i] != '\\') {
+				fileName.insert(fileName.begin(), filePath[i]);
+			}
+			else {
+				UpdateTitle(fileName);
+				break;
+			}
+		}
 
 		return true;
 	}
 	
 	inline void AppendToText(std::string& newText) {
-		strcat_s(m_EditorBuffer, newText.c_str());
-	}
-
-	inline void ResetText() {
-		strcpy_s(m_EditorBuffer,"");
+		m_EditorBufferStr += newText;
 	}
 
 private: // Private Variables
 
-	char m_EditorBuffer[1024 * 64] = "";
+	std::string m_EditorBufferStr = "";
 
 	std::string m_WindowTitle = "Luxim Editor";
 
