@@ -31,7 +31,7 @@ git clone --recursive https://github.com/Zentifyyy/Luxim.git
 ```
 - Then, run ```scripts/Setup-Luxim.bat``` to build the libtinyfiledialogs library and generate a Visual Studio solution file for the main project.
 
-- Then open up the ```LuximApp.sln``` in the base directory. We will then need to add ```tinyfiledialogs``` as a dependency by right clicking on Dependencies in your solution explorer, navigating to add and pressing Existing Project... Then go to ```vendor/Walnut/vendor/libtinyfiledialogs/build``` and add ```tinyfiledialogs.vcxproj```.
+- Then open up the ```LuximApp.sln``` in the base directory. We will then need to add ```tinyfiledialogs``` as a dependency by right clicking on Dependencies in your solution explorer, navigating to add and pressing Existing Project... Then go to ```vendor/libtinyfiledialogs/build``` and add ```tinyfiledialogs.vcxproj```.
 
 - And finally, navigate to the WalnutApp solution in Visual Studio and right click references and then add reference. Tick ```libtinyfiledialogs``` and you are good to go.
 
