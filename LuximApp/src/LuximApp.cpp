@@ -300,7 +300,8 @@ private: // Private Functions
 				Pref_BorderColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Border]);
 
 			if (ImGui::ColorEdit3("Background Colour", (float*)&style.Colors[ImGuiCol_WindowBg])) {
-				Pref_BackgroundColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_WindowBg]);
+				Pref_BackgroundColour = ImGui::GetColorU32(style.Colors[ImGuiCol_WindowBg]);
+
 				ImVec4 bgCol = style.Colors[ImGuiCol_WindowBg];
 				style.Colors[ImGuiCol_Tab] = bgCol;
 				style.Colors[ImGuiCol_TabActive] = bgCol;
@@ -312,8 +313,11 @@ private: // Private Functions
 			}
 
 			if (ImGui::Button("Revert")) {
+				Pref_BackgroundColour = ImGui::GetColorU32(style.Colors[ImGuiCol_WindowBg]);
+
 				style.Colors[ImGuiCol_Text] = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::text);
 				style.Colors[ImGuiCol_Border] = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::backgroundDark);
+
 				ImVec4 bgCol = ImGui::ColorConvertU32ToFloat4(Walnut::UI::Colors::Theme::titlebar);
 				style.Colors[ImGuiCol_WindowBg] = bgCol;
 				style.Colors[ImGuiCol_Tab] = bgCol;
@@ -352,6 +356,7 @@ private: // Private Functions
 			switch (text[0])
 			{
 			case FONTSCALE:
+				text.erase(0, 1);
 				Pref_EditorFontScale = std::stof(text);
 				break;
 			case TEXTCOLOUR:
@@ -432,7 +437,7 @@ private: // Preferences
 
 	ImU32 Pref_TextColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
 	ImU32 Pref_BorderColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Border]);
-	ImU32 Pref_BackgroundColour = Walnut::UI::Colors::Theme::background;
+	ImU32 Pref_BackgroundColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_WindowBg]);
 
 };
 
