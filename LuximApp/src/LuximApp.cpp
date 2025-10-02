@@ -14,7 +14,7 @@ class ExampleLayer : public Walnut::Layer
 public: // Public Functions
 
 	void OnAttach() override {
-		//LoadFile();
+		LoadFile();
 		LoadPrefs();
 	}
 
