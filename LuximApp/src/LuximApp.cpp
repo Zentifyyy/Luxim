@@ -94,7 +94,6 @@ private: // Private Functions
 
 					ImGui::EndMenu();
 					ImGui::End();
-
 					return;
 				}
 			}
@@ -253,7 +252,9 @@ private: // Private Functions
 		std::string text = "";
 
 		while (std::getline(m_FileInput, text)) {
-			m_FavoritePaths.emplace_back(text);
+			if (std::filesystem::exists(text)) {
+				m_FavoritePaths.emplace_back(text);
+			}
 		}
 
 		m_FileInput.close();
