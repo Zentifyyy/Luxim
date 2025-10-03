@@ -1,9 +1,7 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 
-#include "iostream"
 #include "fstream"
-#include <filesystem>
 
 #include "tinyfiledialogs.h"
 
@@ -33,10 +31,6 @@ public: // Public Functions
 
 	inline void UpdateTitle(std::string newTitle) {
 		m_WindowTitle = newTitle;
-	}
-
-	inline std::string GetTitle() {
-		return m_WindowTitle;
 	}
 
 	bool LoadFile(std::string& filePath) {

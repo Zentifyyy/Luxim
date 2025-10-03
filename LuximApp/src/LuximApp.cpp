@@ -5,8 +5,6 @@
 #include "Walnut/UI/UI.h"
 #include "Walnut/ImGui/ImGuiTheme.h"
 
-#include "tinyfiledialogs.h"
-
 #include "LuximEditor.cpp"
 
 #define FONTSCALE '1'
@@ -120,9 +118,8 @@ private: // Private Functions
 
 					SaveFavourites();
 
-					if (m_LuximEditor.GetTitle() == m_FavoritePaths.back()) {
+					if(m_FavoritePaths.size() > 0)
 						m_LuximEditor.LoadFile(m_FavoritePaths.back());
-					}
 
 					ImGui::CloseCurrentPopup();
 					ImGui::EndPopup();
