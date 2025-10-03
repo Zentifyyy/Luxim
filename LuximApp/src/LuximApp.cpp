@@ -19,7 +19,7 @@ class ExampleLayer : public Walnut::Layer
 public: // Public Functions
 
 	void OnAttach() override {
-		LoadFile();
+		LoadFavourites();
 		LoadPrefs();
 	}
 
@@ -49,14 +49,11 @@ public: // Public Functions
 
 		m_FileOpen = true;
 
-		if (!m_LuximEditor.LoadFile(filePath)) { return; }
-		
-		m_LuximEditor.UpdateTitle(FilePathToFileName(filePath));
+		m_LuximEditor.LoadFile(filePath);
 	}
 
 	inline void CreateNewFile() {
 		m_LuximEditor.NewFile();
-		m_LuximEditor.UpdateTitle("New Document");
 		m_FileOpen = true;
 	}
 
@@ -91,7 +88,6 @@ private: // Private Functions
 			if (ImGui::MenuItem("Add Favourite")) {
 
 				if (!AddFavorite(tinyfd_openFileDialog("Open File", "", NULL, NULL, NULL, 0))) {
-
 					ImGui::EndMenu();
 					ImGui::End();
 					return;
@@ -102,20 +98,18 @@ private: // Private Functions
 		}
 
 		ImGui::Separator();
-
+		
 		for (int i = 0; i < m_FavoritePaths.size(); i++) {
 
 			if (ImGui::IsItemHovered()) {
 				ImGui::SetTooltip("Right-click to Delete");
 			}
 
-			if (ImGui::Selectable(FilePathToFileName(m_FavoritePaths[i]).c_str()))
+			if (ImGui::Selectable(m_LuximEditor.FilePathToFileName(m_FavoritePaths[i]).c_str()))
 			{
 				m_FileOpen = true;
 
-				if (!m_LuximEditor.LoadFile(m_FavoritePaths[i])) { return; }
-
-				m_LuximEditor.UpdateTitle(FilePathToFileName(m_FavoritePaths[i]));;
+				m_LuximEditor.LoadFile(m_FavoritePaths[i]);
 			}
 
 			if (ImGui::BeginPopupContextItem())
@@ -124,7 +118,11 @@ private: // Private Functions
 
 					m_FavoritePaths.erase(m_FavoritePaths.begin() + i);
 
-					SaveFile();
+					SaveFavourites();
+
+					if (m_LuximEditor.GetTitle() == m_FavoritePaths.back()) {
+						m_LuximEditor.LoadFile(m_FavoritePaths.back());
+					}
 
 					ImGui::CloseCurrentPopup();
 					ImGui::EndPopup();
@@ -222,28 +220,12 @@ private: // Private Functions
 
 		m_FavoritePaths.push_back(filePath);
 
-		SaveFile();
+		SaveFavourites();
 
 		return true;
 	}
 
-	inline std::string FilePathToFileName(std::string& filePath) {
-
-		std::string fileName = "";
-
-		for (int i = filePath.length(); i > 0; i--) {
-			if (filePath[i] != '\\') {
-				fileName.insert(fileName.begin(), filePath[i]);
-			}
-			else {
-				return fileName;
-			}
-		}
-
-		return "";
-	}
-
-	bool LoadFile() {
+	bool LoadFavourites() {
 
 		m_FileInput.open("favorites.ini");
 
@@ -258,7 +240,7 @@ private: // Private Functions
 			else
 			{
 				tinyfd_messageBox("File Not Found", ("The file: " + text + " could not be found. It will be removed from your favorites.").c_str(),"ok", "error", 1);
-				SaveFile();
+				SaveFavourites();
 			}
 		}
 
@@ -267,7 +249,7 @@ private: // Private Functions
 		return true;
 	}
 
-	void SaveFile() {
+	void SaveFavourites() {
 
 		m_FileOutput.open("favorites.ini");
 

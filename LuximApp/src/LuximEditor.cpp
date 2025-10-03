@@ -35,6 +35,10 @@ public: // Public Functions
 		m_WindowTitle = newTitle;
 	}
 
+	inline std::string GetTitle() {
+		return m_WindowTitle;
+	}
+
 	bool LoadFile(std::string& filePath) {
 
 		if (m_WindowFlags == ImGuiWindowFlags_UnsavedDocument) { SaveFile(); }
@@ -42,10 +46,14 @@ public: // Public Functions
 		ResetText();
 		
 		m_CurrentFilePath = filePath;
+		UpdateTitle(FilePathToFileName(filePath));
 
 		m_FileInput.open(filePath);
 
-		if (!m_FileInput.is_open()) { return false; }
+		if (!m_FileInput.is_open()) {
+			tinyfd_messageBox("Error", ("Could not open file: " + FilePathToFileName(filePath)).c_str(), "ok", "error", 1);
+			return false;
+		}
 
 		std::string text = "";
 
@@ -65,9 +73,26 @@ public: // Public Functions
 
 	void NewFile() {
 		ResetText();
+		UpdateTitle("New Document");
 		m_CurrentFilePath = "";
 	}
 
+	inline std::string FilePathToFileName(std::string& filePath) {
+
+		std::string fileName = "";
+
+		for (int i = filePath.length(); i > 0; i--) {
+			if (filePath[i] != '\\') {
+				fileName.insert(fileName.begin(), filePath[i]);
+			}
+			else {
+				return fileName;
+			}
+		}
+
+		return "";
+	}
+	
 private: // Private Functions
 
 	inline void ResetText() {
@@ -97,17 +122,8 @@ private: // Private Functions
 			return false;
 
 		m_CurrentFilePath = filePath;
-		
-		std::string fileName = "";
-		for (int i = filePath.length(); i > 0; i--) {
-			if (filePath[i] != '\\') {
-				fileName.insert(fileName.begin(), filePath[i]);
-			}
-			else {
-				UpdateTitle(fileName);
-				break;
-			}
-		}
+
+		UpdateTitle(FilePathToFileName(filePath));
 
 		return true;
 	}
