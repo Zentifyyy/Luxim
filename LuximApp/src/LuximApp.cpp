@@ -255,6 +255,11 @@ private: // Private Functions
 			if (std::filesystem::exists(text)) {
 				m_FavoritePaths.emplace_back(text);
 			}
+			else
+			{
+				tinyfd_messageBox("File Not Found", ("The file: " + text + " could not be found. It will be removed from your favorites.").c_str(),"ok", "error", 1);
+				SaveFile();
+			}
 		}
 
 		m_FileInput.close();
