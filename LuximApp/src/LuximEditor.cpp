@@ -11,10 +11,12 @@ public: // Public Functions
 	void RenderEditor() {
 
 		ImGui::SetNextWindowDockID(2,0);
-
 		ImGui::Begin(m_WindowTitle.c_str(), 0, m_WindowFlags);
 
-		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyPressed(ImGuiKey_S)) {
+		if(ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyDown(ImGuiKey_LeftShift) && ImGui::IsKeyPressed(ImGuiKey_S)) {
+			SaveFileAs();
+		}
+		else if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyPressed(ImGuiKey_S)) {
 			SaveFile();
 		}
 
@@ -86,22 +88,18 @@ public: // Public Functions
 
 		return "";
 	}
-	
-private: // Private Functions
 
 	inline void ResetText() {
 		m_EditorBufferStr = "";
 	}
 
 	void SaveFile() {
-
 		if (m_CurrentFilePath == "") {
-			if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL)))
+			if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL), false))
 				return;
 		}
 
 		m_FileOutput.open(m_CurrentFilePath);
-
 		if (!m_FileOutput.is_open()) { return; }
 
 		m_FileOutput << m_EditorBufferStr;
@@ -111,9 +109,20 @@ private: // Private Functions
 		m_FileOutput.close();
 	}
 
-	bool SetCurrentFilePath(std::string filePath) {
+	void SaveFileAs() {
+		if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL), true))
+			return;
+		SaveFile();
+	}
+	
+private: // Private Functions
+
+	bool SetCurrentFilePath(std::string filePath, bool isSaveFileAs) {
 		if (filePath == "")
 			return false;
+
+		if (isSaveFileAs)
+			std::remove(m_CurrentFilePath.c_str());
 
 		m_CurrentFilePath = filePath;
 

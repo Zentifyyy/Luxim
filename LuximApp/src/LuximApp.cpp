@@ -21,6 +21,10 @@ public: // Public Functions
 		LoadPrefs();
 	}
 
+	void OnDetach() override {
+		m_LuximEditor.SaveFile();
+	}
+
 	virtual void OnUIRender() override {
 
 		if (m_FileOpen) {
@@ -50,19 +54,27 @@ public: // Public Functions
 		m_LuximEditor.LoadFile(filePath);
 	}
 
-	inline void CreateNewFile() {
+	void CreateNewFile() {
 		m_LuximEditor.NewFile();
 		m_FileOpen = true;
 	}
 
-	inline void ShowAboutModal()
+	void ShowAboutModal()
 	{
 		m_AboutModalOpen = true;
 	}
 
-	inline void ShowPreferencesModal()
+	void ShowPreferencesModal()
 	{
 		m_PreferencesOpen = true;
+	}
+
+	void SaveFile() {
+		m_LuximEditor.SaveFile();
+	}
+
+	void SaveFileAs() {
+		m_LuximEditor.SaveFileAs();
 	}
 
 private: // Private Functions
@@ -477,6 +489,16 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 			if (ImGui::MenuItem("New File"))
 			{
 				exampleLayer->CreateNewFile();
+			}
+
+			if (ImGui::MenuItem("Save File"))
+			{
+				exampleLayer->SaveFile();
+			}
+
+			if (ImGui::MenuItem("Save File As"))
+			{
+				exampleLayer->SaveFileAs();
 			}
 
 			if (ImGui::MenuItem("About"))
