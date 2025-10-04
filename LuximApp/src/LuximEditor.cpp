@@ -31,10 +31,6 @@ public: // Public Functions
 		ImGui::End();
 	}
 
-	inline void UpdateTitle(std::string newTitle) {
-		m_WindowTitle = newTitle;
-	}
-
 	bool LoadFile(std::string& filePath) {
 
 		if (m_WindowFlags == ImGuiWindowFlags_UnsavedDocument) { SaveFile(); }
@@ -89,15 +85,10 @@ public: // Public Functions
 		return "";
 	}
 
-	inline void ResetText() {
-		m_EditorBufferStr = "";
-	}
-
 	void SaveFile() {
-		if (m_CurrentFilePath == "") {
-			if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL), false))
-				return;
-		}
+		if (m_CurrentFilePath == "")
+			SaveFileAs();
+			return;
 
 		m_FileOutput.open(m_CurrentFilePath);
 		if (!m_FileOutput.is_open()) { return; }
@@ -116,6 +107,14 @@ public: // Public Functions
 	}
 	
 private: // Private Functions
+
+	inline void UpdateTitle(std::string newTitle) {
+		m_WindowTitle = newTitle;
+	}
+
+	inline void ResetText() {
+		m_EditorBufferStr = "";
+	}
 
 	bool SetCurrentFilePath(std::string filePath, bool isSaveFileAs) {
 		if (filePath == "")

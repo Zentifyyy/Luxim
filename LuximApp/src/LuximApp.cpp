@@ -22,7 +22,8 @@ public: // Public Functions
 	}
 
 	void OnDetach() override {
-		m_LuximEditor.SaveFile();
+		if (m_FileOpen)
+			m_LuximEditor.SaveFile();
 	}
 
 	virtual void OnUIRender() override {
@@ -491,6 +492,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 				exampleLayer->CreateNewFile();
 			}
 
+			ImGui::Separator();
+
 			if (ImGui::MenuItem("Save File"))
 			{
 				exampleLayer->SaveFile();
@@ -500,6 +503,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 			{
 				exampleLayer->SaveFileAs();
 			}
+
+			ImGui::Separator();
 
 			if (ImGui::MenuItem("About"))
 			{
