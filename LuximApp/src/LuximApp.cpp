@@ -473,9 +473,9 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.TitlebarButtonPressedColour = ImColor{ 0, 255, 220 ,50 };
 
 	spec.TitlebarHeight = 48.0f;
-	spec.TitlebarPaddingY = 8.0f;
+	spec.TitlebarPaddingY = 10.0f;
 
-	spec.LogoSize = { 38.0f , 38.0f };
+	spec.LogoSize = { 34.0f , 34.0f };
 	
 	spec.IconPath = "img/AppIcon.png";
 
