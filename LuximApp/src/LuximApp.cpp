@@ -71,11 +71,18 @@ public: // Public Functions
 	}
 
 	void SaveFile() {
-		m_LuximEditor.SaveFile();
+		if(m_FileOpen)
+			m_LuximEditor.SaveFile();
+		else
+			tinyfd_messageBox("Error", "No file is currently open.", "ok", "error", 1);
 	}
 
 	void SaveFileAs() {
-		m_LuximEditor.SaveFileAs();
+		if (m_FileOpen) {
+			m_LuximEditor.SaveFileAs();
+		}
+		else
+			tinyfd_messageBox("Error", "No file is currently open.", "ok", "error", 1);
 	}
 
 private: // Private Functions
@@ -185,12 +192,11 @@ private: // Private Functions
 		if (!m_AboutModalOpen)
 			return;
 		
-		ImVec2 windowSize{ 280, 185 };
+		const ImVec2 windowSize{ 280, 185 };
 		ImGui::SetCursorPos({ ImGui::GetContentRegionAvail().x / 2 - windowSize.x / 2,
 							  ImGui::GetContentRegionAvail().y / 2 - windowSize.y / 2 });
 
 		ImGui::SetNextWindowSize(windowSize);
-
 		ImGui::OpenPopup("About");
 		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
 		if (m_AboutModalOpen)
@@ -290,7 +296,7 @@ private: // Private Functions
 		if (!m_PreferencesOpen)
 			return;
 
-		ImVec2 windowSize{ 500, 292 };
+		const ImVec2 windowSize{ 500, 292 };
 		ImGui::SetCursorPos({ ImGui::GetContentRegionAvail().x / 2 - windowSize.x / 2,
 							  ImGui::GetContentRegionAvail().y / 2 - windowSize.y / 2 });
 

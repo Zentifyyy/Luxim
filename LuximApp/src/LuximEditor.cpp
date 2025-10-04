@@ -4,6 +4,7 @@
 #include "fstream"
 
 #include "tinyfiledialogs.h"
+#include <iostream>
 
 class Editor {
 public: // Public Functions
@@ -86,9 +87,8 @@ public: // Public Functions
 	}
 
 	void SaveFile() {
-		if (m_CurrentFilePath == "")
+		if (m_CurrentFilePath.empty())
 			SaveFileAs();
-			return;
 
 		m_FileOutput.open(m_CurrentFilePath);
 		if (!m_FileOutput.is_open()) { return; }
@@ -101,8 +101,9 @@ public: // Public Functions
 	}
 
 	void SaveFileAs() {
-		if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", NULL, NULL, NULL, NULL), true))
+		if (!SetCurrentFilePath(tinyfd_saveFileDialog("Save File", "", 0, NULL, NULL), true))
 			return;
+			
 		SaveFile();
 	}
 	
@@ -117,7 +118,7 @@ private: // Private Functions
 	}
 
 	bool SetCurrentFilePath(std::string filePath, bool isSaveFileAs) {
-		if (filePath == "")
+		if (filePath.empty())
 			return false;
 
 		if (isSaveFileAs)
