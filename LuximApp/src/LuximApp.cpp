@@ -184,9 +184,15 @@ private: // Private Functions
 	void UI_DrawAboutModal() {
 		if (!m_AboutModalOpen)
 			return;
+		
+		ImVec2 windowSize{ 280, 185 };
+		ImGui::SetCursorPos({ ImGui::GetContentRegionAvail().x / 2 - windowSize.x / 2,
+							  ImGui::GetContentRegionAvail().y / 2 - windowSize.y / 2 });
+
+		ImGui::SetNextWindowSize(windowSize);
 
 		ImGui::OpenPopup("About");
-		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
 		if (m_AboutModalOpen)
 		{
 			auto image = Walnut::Application::Get().GetApplicationIcon();
@@ -283,9 +289,15 @@ private: // Private Functions
 	void UI_DrawPreferencesModal() {
 		if (!m_PreferencesOpen)
 			return;
-		
+
+		ImVec2 windowSize{ 500, 292 };
+		ImGui::SetCursorPos({ ImGui::GetContentRegionAvail().x / 2 - windowSize.x / 2,
+							  ImGui::GetContentRegionAvail().y / 2 - windowSize.y / 2 });
+
+		ImGui::SetNextWindowSize(windowSize);
+
 		ImGui::OpenPopup("Preferences");
-		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
 		if (m_PreferencesOpen)
 		{
 			ImGui::SliderFloat("Editor Font Scale", &Pref_EditorFontScale , 0.5f, 2.0f,"%.2f",ImGuiSliderFlags_AlwaysClamp);
@@ -327,8 +339,11 @@ private: // Private Functions
 				style.Colors[ImGuiCol_TitleBg] = bgCol;
 				style.Colors[ImGuiCol_TitleBgActive] = bgCol;
 			}
+
+			ImGui::Separator();
 			
-			if (Walnut::UI::ButtonCentered("Save"))
+			Walnut::UI::ShiftCursorY(5);
+			if (Walnut::UI::ButtonCentered("Save Preferences"))
 			{
 				m_LuximEditor.LoadPreferences(Pref_EditorFontScale);
 				SavePrefs();
