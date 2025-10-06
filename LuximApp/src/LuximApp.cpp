@@ -12,7 +12,7 @@
 #define BORDERCOLOUR 'b'
 #define BACKGROUNDCOLOUR 'g'
 
-class ExampleLayer : public Walnut::Layer
+class LuximApp : public Walnut::Layer
 {
 public: // Public Functions
 
@@ -26,7 +26,7 @@ public: // Public Functions
 			m_LuximEditor.SaveFile();
 	}
 
-	virtual void OnUIRender() override {
+	void OnUIRender() override {
 
 		if (m_FileOpen) {
 			m_LuximEditor.RenderEditor();
@@ -193,14 +193,13 @@ private: // Private Functions
 			return;
 		
 		const ImVec2 windowSize{ 280, 185 };
-		ImGui::SetCursorPos({ ImGui::GetContentRegionAvail().x / 2 - windowSize.x / 2,
-							  ImGui::GetContentRegionAvail().y / 2 - windowSize.y / 2 });
+		ImGui::SetCursorPos( {ImGui::GetCurrentWindow()->Size.x / 2,ImGui::GetCurrentWindow()->Size.y / 2 } );
 
 		ImGui::SetNextWindowSize(windowSize);
 		ImGui::OpenPopup("About");
 		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
-		if (m_AboutModalOpen)
-		{
+		if (m_AboutModalOpen) {
+
 			auto image = Walnut::Application::Get().GetApplicationIcon();
 			ImGui::Image(image->GetDescriptorSet(), { 48, 48 });
 
@@ -297,8 +296,8 @@ private: // Private Functions
 			return;
 
 		const ImVec2 windowSize{ 500, 292 };
-		ImGui::SetCursorPos({ ImGui::GetContentRegionAvail().x / 2 - windowSize.x / 2,
-							  ImGui::GetContentRegionAvail().y / 2 - windowSize.y / 2 });
+		ImGui::SetCursorPos({ ImGui::GetWindowSize().x / 2,
+							  ImGui::GetWindowSize().y / 2 });
 
 		ImGui::SetNextWindowSize(windowSize);
 
@@ -371,8 +370,6 @@ private: // Private Functions
 
 		while (std::getline(m_FileInput, text))
 		{
-			ImGuiIO io = ImGui::GetIO();
-
 			switch (text[0])
 			{
 			case FONTSCALE:
@@ -408,7 +405,7 @@ private: // Private Functions
 
 		if (!m_FileOutput.is_open()) { return; }
 
-		m_FileOutput << FONTSCALE << std::to_string(Pref_EditorFontScale) << "\n";
+		m_FileOutput << FONTSCALE << Pref_EditorFontScale << "\n";
 
 		m_FileOutput << TEXTCOLOUR << Pref_TextColour << "\n";
 		m_FileOutput << BORDERCOLOUR << Pref_BorderColour << "\n";
@@ -482,7 +479,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.UseLogging = false;
 
 	Walnut::Application* app = new Walnut::Application(spec);
-	std::shared_ptr<ExampleLayer> exampleLayer = std::make_shared<ExampleLayer>();
+	std::shared_ptr<LuximApp> luximapp = std::make_shared<LuximApp>();
 	
 	//Styling
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -498,38 +495,38 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 
 	app->SetApplicationIcon("img/AppIcon.png");
 
-	app->PushLayer(exampleLayer);
-	app->SetMenubarCallback([app, exampleLayer]()
+	app->PushLayer(luximapp);
+	app->SetMenubarCallback([app, luximapp]()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
 			if (ImGui::MenuItem("Open File"))
 			{
-				exampleLayer->OpenFile();
+				luximapp->OpenFile();
 			}
 
 			if (ImGui::MenuItem("New File"))
 			{
-				exampleLayer->CreateNewFile();
+				luximapp->CreateNewFile();
 			}
 
 			ImGui::Separator();
 
 			if (ImGui::MenuItem("Save File"))
 			{
-				exampleLayer->SaveFile();
+				luximapp->SaveFile();
 			}
 
 			if (ImGui::MenuItem("Save File As"))
 			{
-				exampleLayer->SaveFileAs();
+				luximapp->SaveFileAs();
 			}
 
 			ImGui::Separator();
 
 			if (ImGui::MenuItem("About"))
 			{
-				exampleLayer->ShowAboutModal();
+				luximapp->ShowAboutModal();
 			}
 
 			if (ImGui::MenuItem("Exit"))
@@ -543,7 +540,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 		{
 			if (ImGui::MenuItem("Preferences"))
 			{
-				exampleLayer->ShowPreferencesModal();
+				luximapp->ShowPreferencesModal();
 			}
 
 			ImGui::EndMenu();

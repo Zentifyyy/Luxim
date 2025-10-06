@@ -4,7 +4,6 @@
 #include "fstream"
 
 #include "tinyfiledialogs.h"
-#include <iostream>
 
 class Editor {
 public: // Public Functions
@@ -78,9 +77,7 @@ public: // Public Functions
 			if (filePath[i] != '\\') {
 				fileName.insert(fileName.begin(), filePath[i]);
 			}
-			else {
-				return fileName;
-			}
+			else return fileName;
 		}
 
 		return "";
