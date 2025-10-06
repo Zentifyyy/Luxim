@@ -16,35 +16,34 @@ class LuximApp : public Walnut::Layer
 {
 public: // Public Functions
 
-	void OnAttach() override {
+	void OnAttach() override 
+	{
 		LoadFavourites();
 		LoadPrefs();
 	}
 
-	void OnDetach() override {
-		if (m_FileOpen)
-			m_LuximEditor.SaveFile();
+	void OnDetach() override 
+	{
+		if (m_FileOpen) m_LuximEditor.SaveFile();
 	}
 
-	void OnUIRender() override {
+	void OnUIRender() override 
+	{
 
-		if (m_FileOpen) {
+		if (m_FileOpen)
 			m_LuximEditor.RenderEditor();
-		}
-		else {
+		else
 			UI_DrawIntro();
-		}
 
 		UI_DrawSidebar();
 
 		UI_DrawAboutModal();
-
 		UI_DrawPreferencesModal();
 	}
 
-	void OpenFile() {
-		if (!AddFavorite(tinyfd_openFileDialog("Open File", "", 0, 0, 0, 0)))
-			return;
+	void OpenFile() 
+	{
+		if (!AddFavorite(tinyfd_openFileDialog("Open File", "", 0, 0, 0, 0))) return;
 
 		std::string filePath = m_FavoritePaths.at(m_FavoritePaths.size() - 1);
 
@@ -55,7 +54,8 @@ public: // Public Functions
 		m_LuximEditor.LoadFile(filePath);
 	}
 
-	void CreateNewFile() {
+	void CreateNewFile() 
+	{
 		m_LuximEditor.NewFile();
 		m_FileOpen = true;
 	}
@@ -71,24 +71,23 @@ public: // Public Functions
 	}
 
 	void SaveFile() {
-		if(m_FileOpen)
+		if (m_FileOpen)
 			m_LuximEditor.SaveFile();
 		else
 			tinyfd_messageBox("Error", "No file is currently open.", "ok", "error", 1);
 	}
 
 	void SaveFileAs() {
-		if (m_FileOpen) {
+		if (m_FileOpen)
 			m_LuximEditor.SaveFileAs();
-		}
 		else
 			tinyfd_messageBox("Error", "No file is currently open.", "ok", "error", 1);
 	}
 
 private: // Private Functions
 
-	void UI_DrawIntro() {
-
+	void UI_DrawIntro() 
+	{
 		ImGui::Begin("Welcome to Luxim");
 
 		ImGui::Text("Luxim is a text editor created for ease of use.");
@@ -97,15 +96,16 @@ private: // Private Functions
 		ImGui::End();
 	}
 
-	void UI_DrawSidebar() {
-
+	void UI_DrawSidebar() 
+	{
 		ImGui::Begin("Sidebar");
 
 		if (ImGui::BeginMenu("Favourites"))
 		{
-			if (ImGui::MenuItem("Add Favourite")) {
-
-				if (!AddFavorite(tinyfd_openFileDialog("Open File", "", NULL, NULL, NULL, 0))) {
+			if (ImGui::MenuItem("Add Favourite")) 
+			{
+				if (!AddFavorite(tinyfd_openFileDialog("Open File", "", NULL, NULL, NULL, 0))) 
+				{
 					ImGui::EndMenu();
 					ImGui::End();
 					return;
@@ -116,9 +116,9 @@ private: // Private Functions
 		}
 
 		ImGui::Separator();
-		
-		for (int i = 0; i < m_FavoritePaths.size(); i++) {
 
+		for (int i = 0; i < m_FavoritePaths.size(); i++) 
+		{
 			if (ImGui::IsItemHovered()) {
 				ImGui::SetTooltip("Right-click to Delete");
 			}
@@ -132,13 +132,14 @@ private: // Private Functions
 
 			if (ImGui::BeginPopupContextItem())
 			{
-				if (ImGui::Selectable("Delete")) {
+				if (ImGui::Selectable("Delete")) 
+				{
 
 					m_FavoritePaths.erase(m_FavoritePaths.begin() + i);
 
 					SaveFavourites();
 
-					if(m_FavoritePaths.size() > 0)
+					if (m_FavoritePaths.size() > 0)
 						m_LuximEditor.LoadFile(m_FavoritePaths.back());
 
 					ImGui::CloseCurrentPopup();
@@ -148,7 +149,8 @@ private: // Private Functions
 					return;
 				}
 
-				if (ImGui::Selectable("Move Down")) {
+				if (ImGui::Selectable("Move Down")) 
+				{
 
 					std::string temp = "";
 
@@ -165,7 +167,8 @@ private: // Private Functions
 					return;
 				}
 
-				if (ImGui::Selectable("Move Up")) {
+				if (ImGui::Selectable("Move Up")) 
+				{
 					std::string temp = "";
 
 					if (i == 0) { ImGui::End();  return; }
@@ -188,12 +191,12 @@ private: // Private Functions
 		ImGui::End();
 	}
 
-	void UI_DrawAboutModal() {
-		if (!m_AboutModalOpen)
-			return;
-		
+	void UI_DrawAboutModal() 
+	{
+		if (!m_AboutModalOpen) return;
+
 		const ImVec2 windowSize{ 280, 185 };
-		ImGui::SetCursorPos( {ImGui::GetCurrentWindow()->Size.x / 2,ImGui::GetCurrentWindow()->Size.y / 2 } );
+		ImGui::SetCursorPos({ ImGui::GetCurrentWindow()->Size.x / 2,ImGui::GetCurrentWindow()->Size.y / 2 });
 
 		ImGui::SetNextWindowSize(windowSize);
 		ImGui::OpenPopup("About");
@@ -230,11 +233,12 @@ private: // Private Functions
 		}
 	}
 
-	bool AddFavorite(const char* filePath) {
-		if (filePath == nullptr)
-			return false;
+	bool AddFavorite(const char* filePath) 
+	{
+		if (filePath == nullptr) return false;
 
-		for (int i = 0; i < m_FavoritePaths.size(); i++) {
+		for (int i = 0; i < m_FavoritePaths.size(); i++) 
+		{
 			if (filePath == m_FavoritePaths[i])
 				return false;
 		}
@@ -246,21 +250,21 @@ private: // Private Functions
 		return true;
 	}
 
-	bool LoadFavourites() {
-
+	bool LoadFavourites() 
+	{
 		m_FileInput.open("favorites.ini");
 
-		if (!m_FileInput.is_open()) { return false; }
+		if (!m_FileInput.is_open()) return false;
 
 		std::string text = "";
 
-		while (std::getline(m_FileInput, text)) {
-			if (std::filesystem::exists(text)) {
+		while (std::getline(m_FileInput, text)) 
+		{
+			if (std::filesystem::exists(text)) 
 				m_FavoritePaths.emplace_back(text);
-			}
 			else
 			{
-				tinyfd_messageBox("File Not Found", ("The file: " + text + " could not be found. It will be removed from your favorites.").c_str(),"ok", "error", 1);
+				tinyfd_messageBox("File Not Found", ("The file: " + text + " could not be found. It will be removed from your favorites.").c_str(), "ok", "error", 1);
 				SaveFavourites();
 			}
 		}
@@ -270,8 +274,8 @@ private: // Private Functions
 		return true;
 	}
 
-	void SaveFavourites() {
-
+	void SaveFavourites() 
+	{
 		m_FileOutput.open("favorites.ini");
 
 		if (!m_FileOutput.is_open()) { return; }
@@ -283,17 +287,17 @@ private: // Private Functions
 		m_FileOutput.close();
 	}
 
-	bool IsValidPath(std::string path, std::string& out) {
-		if (path.empty())
-			return false;
+	bool IsValidPath(std::string path, std::string& out) 
+	{
+		if (path.empty()) return false;
 
 		out = path;
 		return true;
 	}
 
-	void UI_DrawPreferencesModal() {
-		if (!m_PreferencesOpen)
-			return;
+	void UI_DrawPreferencesModal() 
+	{
+		if (!m_PreferencesOpen) return;
 
 		const ImVec2 windowSize{ 500, 292 };
 		ImGui::SetCursorPos({ ImGui::GetWindowSize().x / 2,
@@ -305,12 +309,12 @@ private: // Private Functions
 		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
 		if (m_PreferencesOpen)
 		{
-			ImGui::SliderFloat("Editor Font Scale", &Pref_EditorFontScale , 0.5f, 2.0f,"%.2f",ImGuiSliderFlags_AlwaysClamp);
+			ImGui::SliderFloat("Editor Font Scale", &Pref_EditorFontScale, 0.5f, 2.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
 
 			ImGui::Separator();
 
-			if(ImGui::ColorEdit3("Text Colour", (float*)&style.Colors[ImGuiCol_Text]))
-				 Pref_TextColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
+			if (ImGui::ColorEdit3("Text Colour", (float*)&style.Colors[ImGuiCol_Text]))
+				Pref_TextColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
 
 			if (ImGui::ColorEdit3("Border Colour", (float*)&style.Colors[ImGuiCol_Border]))
 				Pref_BorderColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Border]);
@@ -346,7 +350,7 @@ private: // Private Functions
 			}
 
 			ImGui::Separator();
-			
+
 			Walnut::UI::ShiftCursorY(5);
 			if (Walnut::UI::ButtonCentered("Save Preferences"))
 			{
@@ -360,7 +364,7 @@ private: // Private Functions
 		}
 	}
 
-	void LoadPrefs() 
+	void LoadPrefs()
 	{
 		m_FileInput.open("prefs.ini");
 
@@ -399,7 +403,7 @@ private: // Private Functions
 		m_FileInput.close();
 	}
 
-	void SavePrefs() 
+	void SavePrefs()
 	{
 		m_FileOutput.open("prefs.ini");
 
@@ -414,8 +418,8 @@ private: // Private Functions
 		m_FileOutput.close();
 	}
 
-	void SetCustomColourTheme() {
-
+	void SetCustomColourTheme() 
+	{
 		style.Colors[ImGuiCol_Text] = ImGui::ColorConvertU32ToFloat4(Pref_TextColour);
 
 		style.Colors[ImGuiCol_Border] = ImGui::ColorConvertU32ToFloat4(Pref_BorderColour);
@@ -440,12 +444,10 @@ private: // Private Variables
 	bool m_PreferencesOpen = false;
 
 	std::vector<std::string> m_FavoritePaths{};
-
-	float m_FavoriteButtonHeight = 40.0f;
-
+	
 	std::ifstream m_FileInput;
 	std::ofstream m_FileOutput;
-
+	
 	ImGuiStyle& style = ImGui::GetStyle();
 
 private: // Preferences
@@ -455,7 +457,6 @@ private: // Preferences
 	ImU32 Pref_TextColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Text]);
 	ImU32 Pref_BorderColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_Border]);
 	ImU32 Pref_BackgroundColour = ImGui::ColorConvertFloat4ToU32(style.Colors[ImGuiCol_WindowBg]);
-
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
@@ -494,7 +495,7 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	style.Colors[ImGuiCol_SeparatorActive] = { 0, 255, 220 , 0.3f };
 
 	app->SetApplicationIcon("img/AppIcon.png");
-
+	
 	app->PushLayer(luximapp);
 	app->SetMenubarCallback([app, luximapp]()
 	{
