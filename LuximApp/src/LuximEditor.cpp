@@ -13,10 +13,7 @@ public: // Public Functions
 		ImGui::SetNextWindowDockID(2,0);
 		ImGui::Begin(m_WindowTitle.c_str(), 0, m_WindowFlags);
 
-		if(ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyDown(ImGuiKey_LeftShift) && ImGui::IsKeyPressed(ImGuiKey_S))
-			SaveFileAs();
-		else if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && ImGui::IsKeyPressed(ImGuiKey_S))
-			SaveFile();
+		HandleShortcuts();
 
 		ImGui::SetWindowFontScale(m_EditorTextScale);
 
@@ -106,6 +103,21 @@ public: // Public Functions
 	}
 	
 private: // Private Functions
+
+	inline void HandleShortcuts() {
+		if (ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+		{
+			if (ImGui::GetIO().MouseWheel > 0 && m_EditorTextScale < 5)
+				m_EditorTextScale++;
+			else if (ImGui::GetIO().MouseWheel < 0 && m_EditorTextScale > 1)
+				m_EditorTextScale--;
+
+			if (ImGui::IsKeyDown(ImGuiKey_LeftShift) && ImGui::IsKeyPressed(ImGuiKey_S))
+				SaveFileAs();
+			else if (ImGui::IsKeyPressed(ImGuiKey_S))
+				SaveFile();
+		}
+	}
 
 	inline void UpdateTitle(std::string newTitle) 
 	{

@@ -201,8 +201,8 @@ private: // Private Functions
 		ImGui::SetNextWindowSize(windowSize);
 		ImGui::OpenPopup("About");
 		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
-		if (m_AboutModalOpen) {
-
+		if (m_AboutModalOpen) 
+		{
 			auto image = Walnut::Application::Get().GetApplicationIcon();
 			ImGui::Image(image->GetDescriptorSet(), { 48, 48 });
 
@@ -285,14 +285,6 @@ private: // Private Functions
 		}
 
 		m_FileOutput.close();
-	}
-
-	bool IsValidPath(std::string path, std::string& out) 
-	{
-		if (path.empty()) return false;
-
-		out = path;
-		return true;
 	}
 
 	void UI_DrawPreferencesModal() 
