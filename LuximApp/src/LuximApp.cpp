@@ -195,12 +195,11 @@ private: // Private Functions
 	{
 		if (!m_AboutModalOpen) return;
 
-		const ImVec2 windowSize{ 280, 185 };
-		ImGui::SetCursorPos({ ImGui::GetCurrentWindow()->Size.x / 2,ImGui::GetCurrentWindow()->Size.y / 2 });
+		ImVec2 center = ImGui::GetMainViewport()->GetWorkCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
-		ImGui::SetNextWindowSize(windowSize);
 		ImGui::OpenPopup("About");
-		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
+		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_AlwaysAutoResize);
 		if (m_AboutModalOpen) 
 		{
 			auto image = Walnut::Application::Get().GetApplicationIcon();
@@ -291,14 +290,11 @@ private: // Private Functions
 	{
 		if (!m_PreferencesOpen) return;
 
-		const ImVec2 windowSize{ 500, 292 };
-		ImGui::SetCursorPos({ ImGui::GetWindowSize().x / 2,
-							  ImGui::GetWindowSize().y / 2 });
-
-		ImGui::SetNextWindowSize(windowSize);
+		ImVec2 center = ImGui::GetMainViewport()->GetWorkCenter();
+		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
 		ImGui::OpenPopup("Preferences");
-		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_NoResize);
+		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_AlwaysAutoResize);
 		if (m_PreferencesOpen)
 		{
 			ImGui::SliderFloat("Editor Font Scale", &Pref_EditorFontScale, 0.5f, 2.0f, "%.2f", ImGuiSliderFlags_AlwaysClamp);
@@ -470,6 +466,8 @@ Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
 	spec.IconPath = "img/AppIcon.png";
 
 	spec.UseLogging = false;
+
+	spec.MinWindowSize = { 500 , 500 };
 
 	Walnut::Application* app = new Walnut::Application(spec);
 	std::shared_ptr<LuximApp> luximapp = std::make_shared<LuximApp>();
