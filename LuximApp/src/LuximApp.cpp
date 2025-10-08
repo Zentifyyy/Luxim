@@ -29,7 +29,6 @@ public: // Public Functions
 
 	void OnUIRender() override 
 	{
-
 		if (m_FileOpen)
 			m_LuximEditor.RenderEditor();
 		else
@@ -92,7 +91,7 @@ private: // Private Functions
 
 		ImGui::Text("Luxim is a text editor created for ease of use.");
 		ImGui::Text("Add a document to the sidebar or simply open one from the top menu to get started!");
-
+		
 		ImGui::End();
 	}
 
@@ -119,14 +118,12 @@ private: // Private Functions
 
 		for (int i = 0; i < m_FavoritePaths.size(); i++) 
 		{
-			if (ImGui::IsItemHovered()) {
+			if (ImGui::IsItemHovered())
 				ImGui::SetTooltip("Right-click to Delete");
-			}
 
 			if (ImGui::Selectable(m_LuximEditor.FilePathToFileName(m_FavoritePaths[i]).c_str()))
 			{
 				m_FileOpen = true;
-
 				m_LuximEditor.LoadFile(m_FavoritePaths[i]);
 			}
 
@@ -134,53 +131,38 @@ private: // Private Functions
 			{
 				if (ImGui::Selectable("Delete")) 
 				{
-
 					m_FavoritePaths.erase(m_FavoritePaths.begin() + i);
 
 					SaveFavourites();
 
 					if (m_FavoritePaths.size() > 0)
 						m_LuximEditor.LoadFile(m_FavoritePaths.back());
-
-					ImGui::CloseCurrentPopup();
+					
 					ImGui::EndPopup();
 					ImGui::End();
 
 					return;
 				}
 
-				if (ImGui::Selectable("Move Down")) 
+				if (ImGui::Selectable("Move Down") && i != m_FavoritePaths.size() - 1)
 				{
-
-					std::string temp = "";
-
-					if (i == m_FavoritePaths.size() - 1) { ImGui::End(); return; }
-
-					temp = m_FavoritePaths[i + 1];
+					std::string temp = m_FavoritePaths[i + 1];
 					m_FavoritePaths[i + 1] = m_FavoritePaths[i];
 					m_FavoritePaths[i] = temp;
 
-					ImGui::CloseCurrentPopup();
 					ImGui::EndPopup();
 					ImGui::End();
-
 					return;
 				}
 
-				if (ImGui::Selectable("Move Up")) 
+				if (ImGui::Selectable("Move Up") && i != 0)
 				{
-					std::string temp = "";
-
-					if (i == 0) { ImGui::End();  return; }
-
-					temp = m_FavoritePaths[i - 1];
+					std::string temp = m_FavoritePaths[i - 1];
 					m_FavoritePaths[i - 1] = m_FavoritePaths[i];
 					m_FavoritePaths[i] = temp;
 
-					ImGui::CloseCurrentPopup();
 					ImGui::EndPopup();
 					ImGui::End();
-
 					return;
 				}
 
@@ -195,8 +177,7 @@ private: // Private Functions
 	{
 		if (!m_AboutModalOpen) return;
 
-		ImVec2 center = ImGui::GetMainViewport()->GetWorkCenter();
-		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetWorkCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
 		ImGui::OpenPopup("About");
 		m_AboutModalOpen = ImGui::BeginPopupModal("About", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_AlwaysAutoResize);
@@ -242,7 +223,7 @@ private: // Private Functions
 				return false;
 		}
 
-		m_FavoritePaths.push_back(filePath);
+		m_FavoritePaths.emplace_back(filePath);
 
 		SaveFavourites();
 
@@ -290,8 +271,7 @@ private: // Private Functions
 	{
 		if (!m_PreferencesOpen) return;
 
-		ImVec2 center = ImGui::GetMainViewport()->GetWorkCenter();
-		ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+		ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetWorkCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
 		ImGui::OpenPopup("Preferences");
 		m_PreferencesOpen = ImGui::BeginPopupModal("Preferences", nullptr, ImGuiWindowFlags_NoMove + ImGuiWindowFlags_AlwaysAutoResize);

@@ -25,7 +25,7 @@ public: // Public Functions
 		ImGui::End();
 	}
 
-	bool LoadFile(std::string& filePath) 
+	bool LoadFile(const std::string& filePath) 
 	{
 		if (m_WindowFlags == ImGuiWindowFlags_UnsavedDocument) SaveFile();
 
@@ -55,7 +55,7 @@ public: // Public Functions
 		return true;
 	}
 
-	void LoadPreferences(float fontScale) 
+	void LoadPreferences(const float& fontScale) 
 	{
 		m_EditorTextScale = fontScale;
 	}
@@ -67,7 +67,7 @@ public: // Public Functions
 		m_CurrentFilePath = "";
 	}
 
-	inline std::string FilePathToFileName(std::string& filePath) 
+	inline std::string FilePathToFileName(const std::string& filePath)
 	{
 		std::string fileName = "";
 
@@ -119,7 +119,7 @@ private: // Private Functions
 		}
 	}
 
-	inline void UpdateTitle(std::string newTitle) 
+	inline void UpdateTitle(const std::string& newTitle) 
 	{
 		m_WindowTitle = newTitle;
 	}
@@ -129,7 +129,7 @@ private: // Private Functions
 		m_EditorBufferStr = "";
 	}
 
-	bool SetCurrentFilePath(std::string filePath, bool isSaveFileAs) 
+	bool SetCurrentFilePath(const std::string& filePath, bool isSaveFileAs) 
 	{
 		if (filePath.empty()) return false;
 
@@ -142,7 +142,7 @@ private: // Private Functions
 		return true;
 	}
 	
-	inline void AppendToText(std::string& newText) 
+	inline void AppendToText(const std::string& newText) 
 	{
 		m_EditorBufferStr += newText;
 	}
